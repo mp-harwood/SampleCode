@@ -3,7 +3,7 @@
 #####################
 library(dplyr)
 library(stringr)
-library(ggplot2)
+library(stats)
 
 #####################
 # 	Load data 	#
