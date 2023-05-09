@@ -27,6 +27,8 @@ scCountData <- subset(scCountData, SNP %in% names(tt[tt>=2]))
 #####################
 # 	Binomial Test for Adaptive Celltypes	#
 #####################
+
+#sum counts if in adaptive cell for the same individual and SNP
 adaptive<- scCountData[scCountData$celltype=="CD4+_T"|scCountData$celltype=="CD8+_T"|scCountData$celltype=="B_Cells",]
 adaptive<- adaptive %>% group_by(ID_SNP) %>%  dplyr::summarise(across(c(total, der_count), ~sum(.)))
 adaptive<- data.frame(adaptive)
@@ -35,9 +37,9 @@ adaptive$der_count<- as.numeric(adaptive$der_count)
 adaptive$total<- as.numeric(adaptive$total)
 adaptive<- adaptive[!is.na(adaptive$ID_SNP),]
 
+#binomial test
 ngenes <- dim(adaptive)[1]
 for (i in 1:ngenes){
-  #binomial test for alt and total counts
   adaptive$pvals[i] <- binom.test(as.numeric(adaptive$der_count[i]),as.numeric(adaptive$total[i]),p=0.5,alternative="two.sided")[["p.value"]]
 }
 
